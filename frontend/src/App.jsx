@@ -1,0 +1,184 @@
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+
+function App() {
+
+  const [issues, setIssues] = useState([]);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+
+  // get all issues from backend
+  const getIssues = async () => {
+
+    try {
+
+      const response = await axios.get(
+        "http://localhost:5000/issues"
+      );
+
+      setIssues(response.data);
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // run when page loads
+  useEffect(() => {
+    getIssues();
+  }, []);
+
+  // add new task
+  const addTask = async (e) => {
+
+    e.preventDefault();
+
+    try {
+
+      await axios.post(
+        "http://localhost:5000/issues",
+        {
+          title,
+          description,
+        }
+      );
+
+      setTitle("");
+      setDescription("");
+
+      getIssues();
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // change task status
+  const changeStatus = async (id, status) => {
+
+    let updatedStatus = "";
+
+    if (status === "Open") {
+      updatedStatus = "In Progress";
+    }
+    else if (status === "In Progress") {
+      updatedStatus = "Closed";
+    }
+    else {
+      updatedStatus = "Open";
+    }
+
+    try {
+
+      await axios.put(
+        `http://localhost:5000/issues/${id}`,
+        {
+          status: updatedStatus,
+        }
+      );
+
+      getIssues();
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // delete task
+  const deleteTask = async (id) => {
+
+    try {
+
+      await axios.delete(
+        `http://localhost:5000/issues/${id}`
+      );
+
+      getIssues();
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  return (
+
+    <div className="container mt-4">
+
+      <h2 className="text-center mb-4">
+        Mini Task Tracker
+      </h2>
+
+      {/* form */}
+      <form onSubmit={addTask}>
+
+        <input
+          type="text"
+          placeholder="Enter task title"
+          className="form-control mb-3"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          required
+        />
+
+        <textarea
+          placeholder="Enter description"
+          className="form-control mb-3"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        ></textarea>
+
+        <button className="btn btn-primary mb-4">
+          Add Task
+        </button>
+
+      </form>
+
+      {/* task cards */}
+      <div className="row">
+
+        {issues.map((task) => (
+
+          <div
+            className="col-md-4 mb-3"
+            key={task.id}
+          >
+
+            <div className="card p-3">
+
+              <h5>{task.title}</h5>
+
+              <p>{task.description}</p>
+
+              <p>
+                <strong>Status:</strong> {task.status}
+              </p>
+
+              <button
+                className="btn btn-warning mb-2"
+                onClick={() =>
+                  changeStatus(task.id, task.status)
+                }
+              >
+                Change Status
+              </button>
+
+              <button
+                className="btn btn-danger"
+                onClick={() => deleteTask(task.id)}
+              >
+                Delete
+              </button>
+
+            </div>
+
+          </div>
+
+        ))}
+
+      </div>
+
+    </div>
+  );
+}
+
+export default App;
