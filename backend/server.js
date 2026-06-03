@@ -10,15 +10,10 @@ app.use(express.json());
 
 /* Get all issues */
 app.get("/issues", async (req, res) => {
-
   try {
-
-    const result = await pool.query(
-      "SELECT * FROM issues ORDER BY id DESC"
-    );
+    const result = await pool.query("SELECT * FROM issues ORDER BY id DESC");
 
     res.json(result.rows);
-
   } catch (error) {
     console.log(error);
   }
@@ -26,18 +21,15 @@ app.get("/issues", async (req, res) => {
 
 /* Add issue */
 app.post("/issues", async (req, res) => {
-
   try {
-
-    const { title, description } = req.body;
+    const { title, description, status, priority, dueDate } = req.body;
 
     const newIssue = await pool.query(
-      "INSERT INTO issues(title, description) VALUES($1, $2) RETURNING *",
-      [title, description]
+      "INSERT INTO issues(title, description, status, priority, due_date) VALUES($1, $2, $3, $4, $5) RETURNING *",
+      [title, description, status, priority, dueDate],
     );
 
     res.json(newIssue.rows[0]);
-
   } catch (error) {
     console.log(error);
   }
@@ -45,19 +37,16 @@ app.post("/issues", async (req, res) => {
 
 /* Update issue status */
 app.put("/issues/:id", async (req, res) => {
-
   try {
-
     const { id } = req.params;
     const { status } = req.body;
 
-    await pool.query(
-      "UPDATE issues SET status = $1 WHERE id = $2",
-      [status, id]
-    );
+    await pool.query("UPDATE issues SET status = $1 WHERE id = $2", [
+      status,
+      id,
+    ]);
 
     res.json("Issue Updated");
-
   } catch (error) {
     console.log(error);
   }
@@ -65,18 +54,12 @@ app.put("/issues/:id", async (req, res) => {
 
 /* Delete issue */
 app.delete("/issues/:id", async (req, res) => {
-
   try {
-
     const { id } = req.params;
 
-    await pool.query(
-      "DELETE FROM issues WHERE id = $1",
-      [id]
-    );
+    await pool.query("DELETE FROM issues WHERE id = $1", [id]);
 
     res.json("Issue Deleted");
-
   } catch (error) {
     console.log(error);
   }
