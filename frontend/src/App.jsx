@@ -5,7 +5,7 @@ function App() {
   const [issues, setIssues] = useState([]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [priority, setPriority] = useState("Medium");
+  const [priority, setPriority] = useState("");
   const [dueDate, setDueDate] = useState("");
 
   // get all issues from backend
@@ -112,6 +112,7 @@ function App() {
           value={priority}
           onChange={(e) => setPriority(e.target.value)}
         >
+          <option value="">select Priority</option>
           <option value="High">High</option>
           <option value="Medium">Medium</option>
           <option value="Low">Low</option>
