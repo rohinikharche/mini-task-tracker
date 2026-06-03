@@ -112,7 +112,7 @@ function App() {
           value={priority}
           onChange={(e) => setPriority(e.target.value)}
         >
-          <option value="">select Priority</option>
+          <option value="">Select Priority</option>
           <option value="High">High</option>
           <option value="Medium">Medium</option>
           <option value="Low">Low</option>
