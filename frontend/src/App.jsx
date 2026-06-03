@@ -13,9 +13,8 @@ function App() {
     try {
 
       const response = await axios.get(
-        "http://localhost:5000/issues"
-      );
-
+  "https://mini-task-tracker-7a3a.onrender.com/issues"
+);
       setIssues(response.data);
 
     } catch (error) {
@@ -36,7 +35,7 @@ function App() {
     try {
 
       await axios.post(
-        "http://localhost:5000/issues",
+  "https://mini-task-tracker-7a3a.onrender.com/issues",
         {
           title,
           description,
@@ -71,7 +70,7 @@ function App() {
     try {
 
       await axios.put(
-        `http://localhost:5000/issues/${id}`,
+  `https://mini-task-tracker-7a3a.onrender.com/issues/${id}`,
         {
           status: updatedStatus,
         }
@@ -90,8 +89,8 @@ function App() {
     try {
 
       await axios.delete(
-        `http://localhost:5000/issues/${id}`
-      );
+  `https://mini-task-tracker-7a3a.onrender.com/issues/${id}`
+);
 
       getIssues();
 
